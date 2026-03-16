@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="is">
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -7,7 +7,7 @@
     <title>ClickMe1Million</title>
     <meta
       name="description"
-      content="Online clicker thar sem allir vinna saman ad thvi ad na 1.000.000 smellum."
+      content="A live community clicker where everyone works together to reach 1,000,000 clicks."
     />
     <link rel="icon" type="image/png" href="icon.png" />
     <link rel="stylesheet" href="css.css" />
@@ -20,37 +20,30 @@
   </head>
   <body>
     <div class="page-shell">
-      <header class="topbar">
-        <div class="topbar-center">
-          <div class="brand-mark">C+</div>
-          <h1>CLICKER</h1>
-        </div>
-      </header>
-
       <main class="dashboard">
         <section class="hero-card" id="counterPanel">
             <div class="hero-meta">
               <div>
                 <p class="section-label">Online clicker</p>
                 <p class="brand-copy">
-                  Allir smella saman. Eitt markmid. Ein milljon klikk.
+                  One shared counter. One big goal. One million clicks together.
                 </p>
               </div>
               <p class="live-indicator">
                 <span class="live-dot"></span>
-                Uppfaerist sjaalfkrafa fyrir alla
+                Live for everyone
               </p>
             </div>
 
             <div class="status-strip" id="progressPanel">
               <div class="progress-copy">
-                <span>Heildartalning</span>
+                <span>Total count</span>
                 <strong id="goalLabel">0 / 1.000.000</strong>
               </div>
               <div
                 class="progress-bar"
                 role="progressbar"
-                aria-label="Framvinda ad einni milljon smella"
+                aria-label="Progress to one million clicks"
                 aria-valuemin="0"
                 aria-valuemax="1000000"
                 aria-valuenow="0"
@@ -60,17 +53,17 @@
             </div>
 
             <div class="counter-wrap">
-              <p class="counter-caption">Nuna stendur talan i</p>
+              <p class="counter-caption">Current total</p>
               <div class="counter-value" id="counter">0</div>
               <p class="counter-subtitle" id="deltaLabel">
-                Bidur eftir fyrsta klikkinu.
+                Waiting for the first click.
               </p>
             </div>
 
             <div class="cta-panel">
               <button id="button" class="click-button" type="button" disabled>
-                <span class="click-button-title">Klikka</span>
-                <span class="click-button-copy">Baeta +1 vid fyrir alla</span>
+                <span class="click-button-title">Click</span>
+                <span class="click-button-copy">Add +1 for everyone</span>
               </button>
 
               <div class="action-row">
@@ -79,7 +72,7 @@
                 </button>
                 <div class="cooldown-block">
                   <span class="cooldown-label">Reset cooldown</span>
-                  <strong id="resetTimer">Veldu notendanafn</strong>
+                  <strong id="resetTimer">Choose a username</strong>
                 </div>
               </div>
             </div>
@@ -87,15 +80,15 @@
           <div class="dashboard-lower">
             <section class="stats-grid" id="statsPanel">
               <article class="stat-card">
-                <span>Thin klikk</span>
+                <span>Your clicks</span>
                 <strong id="myClicks">0</strong>
               </article>
               <article class="stat-card">
-                <span>Sidan reset</span>
-                <strong id="lastReset">Aldrei</strong>
+                <span>Last reset</span>
+                <strong id="lastReset">Never</strong>
               </article>
               <article class="stat-card">
-                <span>Notandi</span>
+                <span>Username</span>
                 <strong id="currentUser">-</strong>
               </article>
             </section>
@@ -104,9 +97,9 @@
               <div class="leaderboard-header">
                 <div>
                   <p class="section-label">Leaderboard</p>
-                  <h2>Top notendur</h2>
+                  <h2>Top players</h2>
                 </div>
-                <span class="pill" id="playerCount">0 notendur</span>
+                <span class="pill" id="playerCount">0 players</span>
               </div>
               <ol class="leaderboard-list" id="leaderboardList"></ol>
             </aside>
@@ -127,23 +120,23 @@
         aria-modal="true"
         aria-labelledby="usernameTitle"
       >
-        <p class="section-label">Byrjum</p>
-        <h2 id="usernameTitle">Veldu notendanafn</h2>
+        <p class="section-label">Get started</p>
+        <h2 id="usernameTitle">Choose a username</h2>
         <p class="modal-copy">
-          Nafnid vistast i vafranum svo thu getir haldid afram seinna.
+          Your name is saved in this browser so you can come back and keep clicking.
         </p>
         <form id="usernameForm" class="username-form">
-          <label class="sr-only" for="usernameInput">Notendanafn</label>
+          <label class="sr-only" for="usernameInput">Username</label>
           <input
             id="usernameInput"
             name="username"
             type="text"
             maxlength="20"
-            placeholder="t.d. Kristjan"
+            placeholder="e.g. Kristjan"
             autocomplete="nickname"
             required
           />
-          <button class="save-name-button" type="submit">Vista og byrja</button>
+          <button class="save-name-button" type="submit">Save and start</button>
         </form>
         <p class="error-text" id="usernameError" aria-live="polite"></p>
       </div>

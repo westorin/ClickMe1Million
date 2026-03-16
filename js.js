@@ -27,34 +27,34 @@ export function formatNumber(value) {
 
 export function formatRelativeDistance(timestamp) {
   if (!timestamp) {
-    return "Aldrei";
+    return "Never";
   }
 
   const delta = Date.now() - timestamp;
 
   if (delta < 60_000) {
-    return "rett i thessu";
+    return "just now";
   }
 
   const minutes = Math.floor(delta / 60_000);
 
   if (minutes < 60) {
-    return `${minutes} min sidan`;
+    return `${minutes} min ago`;
   }
 
   const hours = Math.floor(minutes / 60);
 
   if (hours < 24) {
-    return `${hours} klst sidan`;
+    return `${hours} hr ago`;
   }
 
   const days = Math.floor(hours / 24);
-  return `${days} dagar sidan`;
+  return `${days} day${days === 1 ? "" : "s"} ago`;
 }
 
 export function formatCooldown(msRemaining) {
   if (msRemaining <= 0) {
-    return "Tilbuinn nuna";
+    return "Ready now";
   }
 
   const totalSeconds = Math.ceil(msRemaining / 1000);
@@ -154,7 +154,7 @@ export function updateDeltaLabel(message) {
 }
 
 export function updatePlayerCount(count) {
-  elements.playerCount.textContent = `${formatNumber(count)} notendur`;
+  elements.playerCount.textContent = `${formatNumber(count)} player${count === 1 ? "" : "s"}`;
 }
 
 export function renderLeaderboard(users, currentUsername) {
@@ -163,7 +163,7 @@ export function renderLeaderboard(users, currentUsername) {
   if (!users.length) {
     const empty = document.createElement("li");
     empty.className = "leaderboard-item";
-    empty.textContent = "Enginn er kominn a listann enn.";
+    empty.textContent = "No players on the board yet.";
     elements.leaderboardList.appendChild(empty);
     return;
   }
@@ -178,7 +178,7 @@ export function renderLeaderboard(users, currentUsername) {
     node.querySelector(".leaderboard-rank").textContent = `#${index + 1}`;
     node.querySelector(".leaderboard-name").textContent = user.name;
     node.querySelector(".leaderboard-meta").textContent =
-      user.lastClickAt ? `Sist virkur ${formatRelativeDistance(user.lastClickAt)}` : "Engin klick enn";
+      user.lastClickAt ? `Last active ${formatRelativeDistance(user.lastClickAt)}` : "No clicks yet";
     node.querySelector(".leaderboard-score").textContent = formatNumber(user.clicks || 0);
 
     elements.leaderboardList.appendChild(node);
@@ -197,4 +197,11 @@ export function spawnBurst(sourceElement) {
   window.setTimeout(() => {
     burst.remove();
   }, 700);
+}
+
+if (typeof document !== "undefined") {
+  document.addEventListener("pointermove", (event) => {
+    document.body.style.setProperty("--cursor-x", `${event.clientX}px`);
+    document.body.style.setProperty("--cursor-y", `${event.clientY}px`);
+  });
 }

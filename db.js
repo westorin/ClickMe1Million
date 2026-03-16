@@ -106,7 +106,9 @@ function connectAuth() {
             clearStoredUsername();
             openUsernameModal(storedUsername);
             if (lastClaimError === "username_taken") {
-              setUsernameError("Thetta notendanafn er tekid. Veldu annad.");
+              setUsernameError(
+                "That username is already taken. Choose another one.",
+              );
             }
             setInteractionEnabled(false);
           }
@@ -121,14 +123,14 @@ function connectAuth() {
     isAuthReady = false;
     currentUid = "";
     setInteractionEnabled(false);
-    updateDeltaLabel("Tengi vid Firebase...");
+    updateDeltaLabel("Connecting to Firebase...");
 
     try {
       await signInAnonymously(auth);
     } catch (error) {
       console.error("Anonymous sign-in failed", error);
       updateDeltaLabel(
-        "Ekki tokst ad tengjast gagnagrunni. Athugadu hvort Anonymous Auth se virkt i Firebase.",
+        "Could not connect to Firebase. Make sure Anonymous Auth is enabled.",
       );
     }
   });
@@ -141,7 +143,7 @@ function bindEvents() {
     const requestedName = normalizeUsername(elements.usernameInput.value);
 
     if (!isUsernameValid(requestedName)) {
-      setUsernameError("Veldu nafn milli 2 og 20 stafa.");
+      setUsernameError("Choose a username between 2 and 20 characters.");
       return;
     }
 
@@ -153,8 +155,8 @@ function bindEvents() {
     if (!claimed) {
       setUsernameError(
         lastClaimError === "username_taken"
-          ? "Thetta notendanafn er tekid. Veldu annad."
-          : "Ekki tokst ad vista nafnid. Reyndu aftur.",
+          ? "That username is already taken. Choose another one."
+          : "Could not save your username. Try again.",
       );
       return;
     }
@@ -190,7 +192,7 @@ function bindEvents() {
     const waitMs = getResetCooldownRemaining(currentUser.lastResetAt || 0);
 
     if (waitMs > 0) {
-      updateDeltaLabel(`Thu getur resetad eftir ${formatCooldown(waitMs)}.`);
+      updateDeltaLabel(`You can reset again in ${formatCooldown(waitMs)}.`);
       return;
     }
 
@@ -276,26 +278,26 @@ function updateGoalMessage(state) {
   const lastAction = state.lastAction || {};
 
   if (!lastAction.timestamp) {
-    updateDeltaLabel("Bidur eftir fyrsta klikkinu.");
+    updateDeltaLabel("Waiting for the first click.");
     return;
   }
 
   if (lastAction.type === "reset") {
-    updateDeltaLabel(`${lastAction.actor || "Einhver"} resetadi teljarann.`);
+    updateDeltaLabel(`${lastAction.actor || "Someone"} reset the counter.`);
     return;
   }
 
   if ((state.counter || 0) >= GOAL) {
     updateDeltaLabel(
-      "Markmidinu er nadi. Haldid samt afram ef thu vilt keyra yfir 1.000.000.",
+      "The goal has been reached. Keep going if you want to push past 1,000,000.",
     );
     return;
   }
 
   updateDeltaLabel(
-    `${lastAction.actor || "Einhver"} baetti vid 1. ${formatNumber(
+    `${lastAction.actor || "Someone"} added a click. ${formatNumber(
       Math.max(GOAL - (state.counter || 0), 0),
-    )} eftir i markmid.`,
+    )} left to reach the goal.`,
   );
 }
 
@@ -344,7 +346,7 @@ function updateResetTimer(initialRemaining) {
 async function claimUsername(username) {
   if (!isAuthReady || !currentUid) {
     lastClaimError = "auth_not_ready";
-    setUsernameError("Biddu andartak, er ad tengjast Firebase.");
+    setUsernameError("Just a moment, connecting to Firebase.");
     return false;
   }
 
@@ -391,7 +393,10 @@ async function claimUsername(username) {
     currentUsername = username;
     storeUsername(username);
     closeUsernameModal();
-    updateUserSummary(currentUsername, stateCache?.users?.[userKey]?.clicks || 0);
+    updateUserSummary(
+      currentUsername,
+      stateCache?.users?.[userKey]?.clicks || 0,
+    );
     elements.clickButton.disabled = false;
     updateResetTimer(
       getResetCooldownRemaining(stateCache?.users?.[userKey]?.lastResetAt || 0),
@@ -406,7 +411,7 @@ async function claimUsername(username) {
 
 async function incrementCounter() {
   if (!isAuthReady || !currentUid) {
-    updateDeltaLabel("Tenging ekki tilbun enn. Reyndu aftur eftir andartak.");
+    updateDeltaLabel("Connection is not ready yet. Try again in a moment.");
     return false;
   }
 
@@ -449,14 +454,14 @@ async function incrementCounter() {
     return result.committed;
   } catch (error) {
     console.error("Counter increment failed", error);
-    updateDeltaLabel("Ekki tokst ad baeta vid smelli. Reyndu aftur.");
+    updateDeltaLabel("Could not add your click. Try again.");
     return false;
   }
 }
 
 async function resetCounter() {
   if (!isAuthReady || !currentUid) {
-    updateDeltaLabel("Tenging ekki tilbun enn. Reyndu aftur eftir andartak.");
+    updateDeltaLabel("Connection is not ready yet. Try again in a moment.");
     return false;
   }
 
@@ -506,14 +511,14 @@ async function resetCounter() {
     });
 
     if (!result.committed) {
-      updateDeltaLabel("Reset tokst ekki. Reyndu aftur.");
+      updateDeltaLabel("Reset failed. Try again.");
       return false;
     }
 
     return true;
   } catch (error) {
     console.error("Counter reset failed", error);
-    updateDeltaLabel("Ekki tokst ad resetta teljarann.");
+    updateDeltaLabel("Could not reset the counter.");
     return false;
   }
 }
@@ -528,7 +533,6 @@ function isUsernameValid(username) {
 
 function isUserOwnedByCurrentDevice(user) {
   return (
-    user?.ownerToken === clientId ||
-    (!!currentUid && user?.uid === currentUid)
+    user?.ownerToken === clientId || (!!currentUid && user?.uid === currentUid)
   );
 }
