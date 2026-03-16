@@ -19,50 +19,16 @@
     />
   </head>
   <body>
-    <div class="app-frame">
-      <aside class="sidebar">
-        <button class="menu-toggle" type="button" aria-label="Open menu">
-          <span></span>
-          <span></span>
-          <span></span>
-        </button>
-
-        <nav class="sidebar-nav" aria-label="Primary">
-          <a
-            class="nav-chip is-active"
-            href="#counterPanel"
-            aria-label="Dashboard"
-          >
-            <span class="nav-icon grid-icon">
-              <span></span><span></span><span></span><span></span>
-            </span>
-          </a>
-          <a class="nav-chip" href="#statsPanel" aria-label="Player stats">
-            <span class="nav-icon person-icon"></span>
-          </a>
-          <a class="nav-chip" href="#leaderboardPanel" aria-label="Leaderboard">
-            <span class="nav-icon chat-icon"></span>
-          </a>
-          <a class="nav-chip" href="#progressPanel" aria-label="Progress">
-            <span class="nav-icon pie-icon"></span>
-          </a>
-        </nav>
-
-        <div class="sidebar-footer">
-          <span class="gear-icon" aria-hidden="true"></span>
+    <div class="page-shell">
+      <header class="topbar">
+        <div class="topbar-center">
+          <div class="brand-mark">C+</div>
+          <h1>CLICKER</h1>
         </div>
-      </aside>
+      </header>
 
-      <div class="page-shell">
-        <header class="topbar">
-          <div class="topbar-center">
-            <div class="brand-mark">C+</div>
-            <h1>CLICKER</h1>
-          </div>
-        </header>
-
-        <main class="dashboard">
-          <section class="hero-card" id="counterPanel">
+      <main class="dashboard">
+        <section class="hero-card" id="counterPanel">
             <div class="hero-meta">
               <div>
                 <p class="section-label">Online clicker</p>
@@ -109,7 +75,7 @@
 
               <div class="action-row">
                 <button id="reset" class="reset-button" type="button" disabled>
-                  Reset
+                  <span>Reset</span>
                 </button>
                 <div class="cooldown-block">
                   <span class="cooldown-label">Reset cooldown</span>
@@ -146,13 +112,12 @@
               </aside>
             </div>
 
-            <div class="page-footer">
-              <p>FOOTER</p>
-              <span class="version-tag">V 2.0</span>
-            </div>
-          </section>
-        </main>
-      </div>
+          <div class="page-footer">
+            <p>ClickMe1Million live board</p>
+            <span class="version-tag">Launch build 2026.03</span>
+          </div>
+        </section>
+      </main>
     </div>
 
     <div class="modal-backdrop" id="usernameModal" aria-hidden="true">
