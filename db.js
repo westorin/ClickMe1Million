@@ -370,8 +370,8 @@ async function claimUsername(username) {
       state.counter = Number(state.counter || 0);
       state.users[userKey] = {
         name: username,
-        uid: currentUid || existingUser.uid || "",
-        ownerToken: clientId,
+        uid: currentUid || claimedUser.uid || "",
+        ownerToken: claimedUser.ownerToken || clientId,
         clicks: Number(claimedUser.clicks || 0),
         joinedAt: claimedUser.joinedAt || now,
         lastSeenAt: now,
