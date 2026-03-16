@@ -11,14 +11,14 @@ Simple realtime community clicker built with HTML, CSS, and Firebase Realtime Da
 
 ## Local setup
 
-1. Open `Westclicker.html` in a browser.
+1. Open `index.html` in a browser.
 2. Make sure Firebase Realtime Database is configured.
 3. Enable Anonymous Auth in Firebase Authentication.
 4. Set Realtime Database rules before going public.
 
 ## Files
 
-- `Westclicker.html` - page structure
+- `index.html` - page structure
 - `css.css` - styles
 - `js.js` - UI helpers
 - `db.js` - Firebase connection and realtime logic
