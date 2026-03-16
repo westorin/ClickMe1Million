@@ -310,8 +310,7 @@ button {
 
 .dashboard-lower {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 360px;
-  gap: 22px;
+  gap: 18px;
   margin-top: 72px;
 }
 
@@ -319,6 +318,7 @@ button {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 14px;
+  align-items: stretch;
 }
 
 .stat-card,
@@ -331,6 +331,7 @@ button {
 .stat-card {
   padding: 18px;
   border-radius: 24px;
+  min-height: 168px;
 }
 
 .stat-card span {
@@ -351,6 +352,7 @@ button {
 .leaderboard-card {
   padding: 18px;
   border-radius: 28px;
+  max-width: 100%;
 }
 
 .leaderboard-header {
@@ -381,20 +383,18 @@ button {
 .leaderboard-list {
   list-style: none;
   margin-top: 16px;
+  display: grid;
+  gap: 10px;
 }
 
 .leaderboard-item {
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 12px 10px;
+  padding: 14px 14px;
   border: 1px solid transparent;
   background: rgba(255, 255, 255, 0.02);
-  border-radius: 18px;
-}
-
-.leaderboard-item + .leaderboard-item {
-  margin-top: 8px;
+  border-radius: 24px;
 }
 
 .leaderboard-item.is-current {
@@ -584,10 +584,6 @@ button:disabled {
 }
 
 @media (max-width: 1080px) {
-  .dashboard-lower {
-    grid-template-columns: 1fr;
-  }
-
   .stats-grid {
     grid-template-columns: 1fr;
   }

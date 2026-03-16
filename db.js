@@ -57,6 +57,7 @@ let resetTimerId = 0;
 let isSubmittingClick = false;
 let isSubmittingReset = false;
 let isAuthReady = false;
+let pendingStoredUsername = "";
 
 const initialState = {
   goal: GOAL,
@@ -73,20 +74,12 @@ const initialState = {
 bootstrap();
 
 function bootstrap() {
-  const storedUsername = normalizeUsername(readStoredUsername());
+  pendingStoredUsername = normalizeUsername(readStoredUsername());
   bindEvents();
   subscribeToState();
   connectAuth();
 
-  if (storedUsername) {
-    claimUsername(storedUsername).then((claimed) => {
-      if (!claimed) {
-        currentUsername = "";
-        openUsernameModal(storedUsername);
-        setInteractionEnabled(false);
-      }
-    });
-  } else {
+  if (!pendingStoredUsername) {
     openUsernameModal();
     setInteractionEnabled(false);
   }
@@ -97,6 +90,21 @@ function connectAuth() {
     if (user) {
       currentUid = user.uid;
       isAuthReady = true;
+
+      if (pendingStoredUsername && !currentUsername) {
+        const storedUsername = pendingStoredUsername;
+        pendingStoredUsername = "";
+
+        claimUsername(storedUsername).then((claimed) => {
+          if (!claimed) {
+            currentUsername = "";
+            openUsernameModal(storedUsername);
+            setInteractionEnabled(false);
+          }
+        });
+        return;
+      }
+
       updateInteractionState();
       return;
     }
