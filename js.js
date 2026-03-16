@@ -91,6 +91,26 @@ export function storeUsername(username) {
   document.cookie = `clickme_username=${encodeURIComponent(username)}; max-age=31536000; path=/; SameSite=Lax`;
 }
 
+export function clearStoredUsername() {
+  localStorage.removeItem("clickme-username");
+  document.cookie = "clickme_username=; max-age=0; path=/; SameSite=Lax";
+}
+
+export function readOrCreateClientId() {
+  const existing = localStorage.getItem("clickme-client-id");
+
+  if (existing) {
+    return existing;
+  }
+
+  const created =
+    globalThis.crypto?.randomUUID?.() ||
+    `client-${Date.now()}-${Math.random().toString(16).slice(2)}`;
+
+  localStorage.setItem("clickme-client-id", created);
+  return created;
+}
+
 export function openUsernameModal(defaultValue = "") {
   elements.usernameModal.classList.add("is-open");
   elements.usernameModal.setAttribute("aria-hidden", "false");

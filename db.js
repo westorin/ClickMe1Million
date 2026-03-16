@@ -11,6 +11,7 @@ import {
   runTransaction,
 } from "https://www.gstatic.com/firebasejs/9.6.5/firebase-database.js";
 import {
+  clearStoredUsername,
   GOAL,
   RESET_COOLDOWN_MS,
   closeUsernameModal,
@@ -19,6 +20,7 @@ import {
   formatNumber,
   normalizeUsername,
   openUsernameModal,
+  readOrCreateClientId,
   readStoredUsername,
   renderLeaderboard,
   setInteractionEnabled,
@@ -58,6 +60,8 @@ let isSubmittingClick = false;
 let isSubmittingReset = false;
 let isAuthReady = false;
 let pendingStoredUsername = "";
+let clientId = "";
+let lastClaimError = "";
 
 const initialState = {
   goal: GOAL,
@@ -74,6 +78,7 @@ const initialState = {
 bootstrap();
 
 function bootstrap() {
+  clientId = readOrCreateClientId();
   pendingStoredUsername = normalizeUsername(readStoredUsername());
   bindEvents();
   subscribeToState();
@@ -98,7 +103,11 @@ function connectAuth() {
         claimUsername(storedUsername).then((claimed) => {
           if (!claimed) {
             currentUsername = "";
+            clearStoredUsername();
             openUsernameModal(storedUsername);
+            if (lastClaimError === "username_taken") {
+              setUsernameError("Thetta notendanafn er tekid. Veldu annad.");
+            }
             setInteractionEnabled(false);
           }
         });
@@ -142,7 +151,11 @@ function bindEvents() {
     const claimed = await claimUsername(requestedName);
 
     if (!claimed) {
-      setUsernameError("Ekki tokst ad vista nafnid. Reyndu aftur.");
+      setUsernameError(
+        lastClaimError === "username_taken"
+          ? "Thetta notendanafn er tekid. Veldu annad."
+          : "Ekki tokst ad vista nafnid. Reyndu aftur.",
+      );
       return;
     }
   });
@@ -330,37 +343,51 @@ function updateResetTimer(initialRemaining) {
 
 async function claimUsername(username) {
   if (!isAuthReady || !currentUid) {
+    lastClaimError = "auth_not_ready";
     setUsernameError("Biddu andartak, er ad tengjast Firebase.");
     return false;
   }
 
   const userKey = usernameToKey(username);
   const now = Date.now();
+  const existingUser = stateCache?.users?.[userKey];
+
+  if (existingUser && !isUserOwnedByCurrentDevice(existingUser)) {
+    lastClaimError = "username_taken";
+    return false;
+  }
 
   try {
     const result = await runTransaction(rootRef, (rawState) => {
       const state = hydrateState(rawState);
-      const existingUser = state.users[userKey] || {};
+      const claimedUser = state.users[userKey] || {};
+
+      if (claimedUser.name && !isUserOwnedByCurrentDevice(claimedUser)) {
+        return;
+      }
 
       state.goal = state.goal || GOAL;
       state.counter = Number(state.counter || 0);
       state.users[userKey] = {
         name: username,
         uid: currentUid || existingUser.uid || "",
-        clicks: Number(existingUser.clicks || 0),
-        joinedAt: existingUser.joinedAt || now,
+        ownerToken: clientId,
+        clicks: Number(claimedUser.clicks || 0),
+        joinedAt: claimedUser.joinedAt || now,
         lastSeenAt: now,
-        lastClickAt: existingUser.lastClickAt || 0,
-        lastResetAt: existingUser.lastResetAt || 0,
+        lastClickAt: claimedUser.lastClickAt || 0,
+        lastResetAt: claimedUser.lastResetAt || 0,
       };
 
       return state;
     });
 
     if (!result.committed) {
+      lastClaimError = "username_taken";
       return false;
     }
 
+    lastClaimError = "";
     currentUsername = username;
     storeUsername(username);
     closeUsernameModal();
@@ -372,6 +399,7 @@ async function claimUsername(username) {
     return true;
   } catch (error) {
     console.error("Username claim failed", error);
+    lastClaimError = "claim_failed";
     return false;
   }
 }
@@ -407,6 +435,7 @@ async function incrementCounter() {
         ...existingUser,
         name: currentUsername,
         uid: currentUid || existingUser.uid || "",
+        ownerToken: existingUser.ownerToken || clientId,
         clicks: Number(existingUser.clicks || 0) + 1,
         joinedAt: existingUser.joinedAt || now,
         lastClickAt: now,
@@ -465,6 +494,7 @@ async function resetCounter() {
         ...existingUser,
         name: currentUsername,
         uid: currentUid || existingUser.uid || "",
+        ownerToken: existingUser.ownerToken || clientId,
         clicks: Number(existingUser.clicks || 0),
         joinedAt: existingUser.joinedAt || now,
         lastSeenAt: now,
@@ -494,4 +524,11 @@ function getResetCooldownRemaining(lastResetAt, now = Date.now()) {
 
 function isUsernameValid(username) {
   return username.length >= 2 && username.length <= 20;
+}
+
+function isUserOwnedByCurrentDevice(user) {
+  return (
+    user?.ownerToken === clientId ||
+    (!!currentUid && user?.uid === currentUid)
+  );
 }
