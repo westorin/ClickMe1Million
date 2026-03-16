@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="is">
   <head>
     <meta charset="utf-8" />
@@ -14,102 +14,145 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Instrument+Serif:ital@0;1&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap"
       rel="stylesheet"
     />
   </head>
   <body>
-    <div class="page-shell">
-      <header class="topbar">
-        <div class="brand-block">
-          <p class="eyebrow">Online Clicker</p>
-          <h1>ClickMe1Million</h1>
-          <p class="brand-copy">
-            Allir smella saman. Eitt markmid. Ein milljon klikk.
-          </p>
-        </div>
+    <div class="app-frame">
+      <aside class="sidebar">
+        <button class="menu-toggle" type="button" aria-label="Open menu">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
 
-        <div class="status-strip">
-          <div class="progress-copy">
-            <span>Heildartalning</span>
-            <strong id="goalLabel">0 / 1.000.000</strong>
-          </div>
-          <div
-            class="progress-bar"
-            role="progressbar"
-            aria-label="Framvinda ad einni milljon smella"
-            aria-valuemin="0"
-            aria-valuemax="1000000"
-            aria-valuenow="0"
+        <nav class="sidebar-nav" aria-label="Primary">
+          <a
+            class="nav-chip is-active"
+            href="#counterPanel"
+            aria-label="Dashboard"
           >
-            <div class="progress-bar-fill" id="progressBarFill"></div>
-          </div>
+            <span class="nav-icon grid-icon">
+              <span></span><span></span><span></span><span></span>
+            </span>
+          </a>
+          <a class="nav-chip" href="#statsPanel" aria-label="Player stats">
+            <span class="nav-icon person-icon"></span>
+          </a>
+          <a class="nav-chip" href="#leaderboardPanel" aria-label="Leaderboard">
+            <span class="nav-icon chat-icon"></span>
+          </a>
+          <a class="nav-chip" href="#progressPanel" aria-label="Progress">
+            <span class="nav-icon pie-icon"></span>
+          </a>
+        </nav>
+
+        <div class="sidebar-footer">
+          <span class="gear-icon" aria-hidden="true"></span>
         </div>
-      </header>
+      </aside>
 
-      <main class="dashboard">
-        <section class="hero-card">
-          <div class="hero-meta">
-            <p class="section-label">Live counter</p>
-            <p class="live-indicator">
-              <span class="live-dot"></span>
-              Uppfaerist sjaalfkrafa fyrir alla
-            </p>
+      <div class="page-shell">
+        <header class="topbar">
+          <div class="topbar-center">
+            <div class="brand-mark">C+</div>
+            <h1>CLICKER</h1>
           </div>
+        </header>
 
-          <div class="counter-wrap">
-            <p class="counter-caption">Nuna stendur talan i</p>
-            <div class="counter-value" id="counter">0</div>
-            <p class="counter-subtitle" id="deltaLabel">
-              Bidur eftir fyrsta klikkinu.
-            </p>
-          </div>
+        <main class="dashboard">
+          <section class="hero-card" id="counterPanel">
+            <div class="hero-meta">
+              <div>
+                <p class="section-label">Online clicker</p>
+                <p class="brand-copy">
+                  Allir smella saman. Eitt markmid. Ein milljon klikk.
+                </p>
+              </div>
+              <p class="live-indicator">
+                <span class="live-dot"></span>
+                Uppfaerist sjaalfkrafa fyrir alla
+              </p>
+            </div>
 
-          <div class="cta-panel">
-            <button id="button" class="click-button" type="button" disabled>
-              <span class="click-button-title">Klikka</span>
-              <span class="click-button-copy">Baeta +1 vid fyrir alla</span>
-            </button>
-
-            <div class="action-row">
-              <button id="reset" class="reset-button" type="button" disabled>
-                Reset
-              </button>
-              <div class="cooldown-block">
-                <span class="cooldown-label">Reset cooldown</span>
-                <strong id="resetTimer">Veldu notendanafn</strong>
+            <div class="status-strip" id="progressPanel">
+              <div class="progress-copy">
+                <span>Heildartalning</span>
+                <strong id="goalLabel">0 / 1.000.000</strong>
+              </div>
+              <div
+                class="progress-bar"
+                role="progressbar"
+                aria-label="Framvinda ad einni milljon smella"
+                aria-valuemin="0"
+                aria-valuemax="1000000"
+                aria-valuenow="0"
+              >
+                <div class="progress-bar-fill" id="progressBarFill"></div>
               </div>
             </div>
-          </div>
 
-          <div class="stats-grid">
-            <article class="stat-card">
-              <span>Notandi</span>
-              <strong id="currentUser">-</strong>
-            </article>
-            <article class="stat-card">
-              <span>Thin klikk</span>
-              <strong id="myClicks">0</strong>
-            </article>
-            <article class="stat-card">
-              <span>Sidan reset</span>
-              <strong id="lastReset">Aldrei</strong>
-            </article>
-          </div>
-        </section>
-
-        <aside class="leaderboard-card">
-          <div class="leaderboard-header">
-            <div>
-              <p class="section-label">Leaderboard</p>
-              <h2>Top notendur</h2>
+            <div class="counter-wrap">
+              <p class="counter-caption">Nuna stendur talan i</p>
+              <div class="counter-value" id="counter">0</div>
+              <p class="counter-subtitle" id="deltaLabel">
+                Bidur eftir fyrsta klikkinu.
+              </p>
             </div>
-            <span class="pill" id="playerCount">0 notendur</span>
-          </div>
 
-          <ol class="leaderboard-list" id="leaderboardList"></ol>
-        </aside>
-      </main>
+            <div class="cta-panel">
+              <button id="button" class="click-button" type="button" disabled>
+                <span class="click-button-title">Klikka</span>
+                <span class="click-button-copy">Baeta +1 vid fyrir alla</span>
+              </button>
+
+              <div class="action-row">
+                <button id="reset" class="reset-button" type="button" disabled>
+                  Reset
+                </button>
+                <div class="cooldown-block">
+                  <span class="cooldown-label">Reset cooldown</span>
+                  <strong id="resetTimer">Veldu notendanafn</strong>
+                </div>
+              </div>
+            </div>
+
+            <div class="dashboard-lower">
+              <section class="stats-grid" id="statsPanel">
+                <article class="stat-card">
+                  <span>Notandi</span>
+                  <strong id="currentUser">-</strong>
+                </article>
+                <article class="stat-card">
+                  <span>Thin klikk</span>
+                  <strong id="myClicks">0</strong>
+                </article>
+                <article class="stat-card">
+                  <span>Sidan reset</span>
+                  <strong id="lastReset">Aldrei</strong>
+                </article>
+              </section>
+
+              <aside class="leaderboard-card" id="leaderboardPanel">
+                <div class="leaderboard-header">
+                  <div>
+                    <p class="section-label">Leaderboard</p>
+                    <h2>Top notendur</h2>
+                  </div>
+                  <span class="pill" id="playerCount">0 notendur</span>
+                </div>
+                <ol class="leaderboard-list" id="leaderboardList"></ol>
+              </aside>
+            </div>
+
+            <div class="page-footer">
+              <p>FOOTER</p>
+              <span class="version-tag">V 2.0</span>
+            </div>
+          </section>
+        </main>
+      </div>
     </div>
 
     <div class="modal-backdrop" id="usernameModal" aria-hidden="true">
